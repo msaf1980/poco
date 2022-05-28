@@ -145,43 +145,7 @@ void Connection::connect(const Poco::Net::StreamSocket& socket)
 
 void Connection::connect(const std::string& uri, SocketFactory& socketFactory)
 {
-	Poco::URI theURI(uri);
-	if (theURI.getScheme() != "mongodb") throw Poco::UnknownURISchemeException(uri);
-
-	std::string userInfo = theURI.getUserInfo();
-	std::string host = theURI.getHost();
-	Poco::UInt16 port = theURI.getPort();
-	if (port == 0) port = 27017;
-
-	std::string databaseName = theURI.getPath();
-	if (!databaseName.empty() && databaseName[0] == '/') databaseName.erase(0, 1);
-	if (databaseName.empty()) databaseName = "admin";
-
-	bool ssl = false;
-	Poco::Timespan connectTimeout;
-	Poco::Timespan socketTimeout;
-	std::string authMechanism = Database::AUTH_SCRAM_SHA1;
-
-	Poco::URI::QueryParameters params = theURI.getQueryParameters();
-	for (Poco::URI::QueryParameters::const_iterator it = params.begin(); it != params.end(); ++it)
-	{
-		if (it->first == "ssl")
-		{
-			ssl = (it->second == "true");
-		}
-		else if (it->first == "connectTimeoutMS")
-		{
-			connectTimeout = static_cast<Poco::Timespan::TimeDiff>(1000)*Poco::NumberParser::parse(it->second);
-		}
-		else if (it->first == "socketTimeoutMS")
-		{
-			socketTimeout = static_cast<Poco::Timespan::TimeDiff>(1000)*Poco::NumberParser::parse(it->second);
-		}
-		else if (it->first == "authMechanism")
-		{
-			authMechanism = it->second;
-		}
-	}
+??
 
 	connect(socketFactory.createSocket(host, port, connectTimeout, ssl));
 
